@@ -1,0 +1,42 @@
+ervices:
+  database:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: app
+      MYSQL_USER: app
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"   # port hôte changé pour éviter le conflit
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - app-network
+
+  php:
+    image: php:8.4-fpm
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - database
+    networks:
+      - app-network
+
+  mailer:
+    image: axllent/mailpit
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: "1"
+      MP_SMTP_AUTH_ALLOW_INSECURE: "1"
+    ports:
+      - "56729:1025"
+      - "56730:8025"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db_data:
