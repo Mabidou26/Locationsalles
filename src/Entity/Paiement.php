@@ -20,7 +20,7 @@ class Paiement
     private Facture $facture;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: false)]
-    private string $montant;
+    private decimal $montant;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: false)]
     private \DateTimeInterface $datePaiement;
@@ -50,7 +50,7 @@ class Paiement
         return $this;
     }
 
-    public function getMontant(): string
+    public function getMontant(): decimal
     {
         return $this->montant;
     }

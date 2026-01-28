@@ -1,4 +1,4 @@
-ervices:
+Services:
   database:
     image: mysql:8.0
     environment:
@@ -7,7 +7,7 @@ ervices:
       MYSQL_PASSWORD: secret
       MYSQL_ROOT_PASSWORD: root
     ports:
-      - "3306:3306"   # port hôte changé pour éviter le conflit
+      - "3307:3306"   # port hôte changé pour éviter le conflit
     volumes:
       - db_data:/var/lib/mysql
     networks:

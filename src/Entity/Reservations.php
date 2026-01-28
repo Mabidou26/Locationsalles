@@ -13,11 +13,13 @@ class Reservations
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $user_id = null;
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private User $user;
 
-    #[ORM\Column]
-    private ?int $Salle_id = null;
+    #[ORM\ManyToOne(targetEntity: Salles::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private Salles $salles;
 
     #[ORM\Column]
     private ?\DateTime $date_debut = null;
@@ -38,28 +40,24 @@ class Reservations
     {
         return $this->id;
     }
-
-    public function getUserId(): ?int
+    public function getUser(): User
     {
-        return $this->user_id;
+        return $this->user;
     }
 
-    public function setUserId(int $user_id): static
+    public function setUser(User $user): self
     {
-        $this->user_id = $user_id;
-
+        $this->user = $user;
         return $this;
     }
-
-    public function getSalleId(): ?int
+    public function getSalles(): Salles
     {
-        return $this->Salle_id;
+        return $this->salles;
     }
 
-    public function setSalleId(int $Salle_id): static
+    public function setSalles(Salles $salles): self
     {
-        $this->Salle_id = $Salle_id;
-
+        $this->salles = $salles;
         return $this;
     }
 
