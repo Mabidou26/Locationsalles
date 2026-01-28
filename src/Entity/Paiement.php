@@ -28,6 +28,12 @@ class Paiement
     #[ORM\Column(enumType: MethodePaiement::class, nullable: false)]
     private MethodePaiement $methode;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $Created_at = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $updated_at = null;
+
     public function getId(): int
     {
         return $this->id;
@@ -74,6 +80,30 @@ class Paiement
     public function setMethode(MethodePaiement $methode): self
     {
         $this->methode = $methode;
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->Created_at;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $Created_at): static
+    {
+        $this->Created_at = $Created_at;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(\DateTimeImmutable $updated_at): static
+    {
+        $this->updated_at = $updated_at;
+
         return $this;
     }
 }
