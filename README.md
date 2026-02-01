@@ -38,7 +38,7 @@ make rebuild
 
 Cloner le dépôt pour obtenir la dernière version :
 
-git clone https://github.com/TON_ORGA/Locationsalles.git
+git clone https://github.com/TON_ORGA/Locationsalles.git (lien envoyé par mail)
 
 👥 Règles de collaboration (rappel)
 
