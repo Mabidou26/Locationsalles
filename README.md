@@ -1,14 +1,52 @@
-# Locationsalles : loc events
+📍 Locationsalles — Location d’espaces événementiels "Loc events"
+📝 Description
 
-Description de salles pour professionnel et particuliers
+Plateforme de location de salles destinée aux professionnels et aux particuliers pour l’organisation d’événements (réunions, fêtes, conférences, etc.).
 
-make help          # Afficher toutes les commandes disponibles avec descriptions
+⚙️ Prérequis
 
-make install       # Installation complète du projet (dependencies + setup)
-make install-app   # Installation des dépendances Symfony uniquement
-make rebuild       # Reconstruction complète des bases de données (Makefile)
+PHP / Composer
 
-git clone          # Pour obtenir les derniers mis à jour
+Symfony
+
+Make
+
+Base de données configurée
+
+🚀 Installation & commandes utiles
+
+Afficher l’aide et la liste des commandes disponibles :
+
+make help
+
+
+Installation complète du projet (dépendances + configuration) :
+
+make install
+
+
+Installation des dépendances Symfony uniquement :
+
+make install-app
+
+
+Reconstruction complète de la base de données :
+
+make rebuild
+
+🔁 Récupérer le projet
+
+Cloner le dépôt pour obtenir la dernière version :
+
+git clone https://github.com/TON_ORGA/Locationsalles.git
+
+👥 Règles de collaboration (rappel)
+
+❌ Aucun push direct sur main
+
+✅ Travail uniquement sur la branche secondaire (develop)
+
+🔀 Passage par Pull Request obligatoire
 
 
 
