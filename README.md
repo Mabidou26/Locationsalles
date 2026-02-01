@@ -1,4 +1,4 @@
-📍 Locationsalles — Location d’espaces événementiels "Loc events"
+📍 Locationsalles — Location d’espaces événementiels **_"Loc events"_**
 📝 Description
 
 Plateforme de location de salles destinée aux professionnels et aux particuliers pour l’organisation d’événements (réunions, fêtes, conférences, etc.).
@@ -36,7 +36,7 @@ Reconstruction complète de la base de données :
 
 Cloner le dépôt pour obtenir la dernière version :
 
-git clone https://github.com/TON_ORGA/Locationsalles.git (lien envoyé par mail)
+**_git clone https://github.com/TON_ORGA/Locationsalles.git (lien envoyé par mail)_**
 
 👥 Règles de collaboration (rappel)
 
