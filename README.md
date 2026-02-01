@@ -17,22 +17,20 @@ Base de données configurée
 
 Afficher l’aide et la liste des commandes disponibles :
 
-make help
-
+****make help**
 
 Installation complète du projet (dépendances + configuration) :
 
-make install
+**make install**
 
 
 Installation des dépendances Symfony uniquement :
 
-make install-app
-
+**make install-app**
 
 Reconstruction complète de la base de données :
 
-make rebuild
+**make rebuild**
 
 🔁 Récupérer le projet
 
