@@ -3,107 +3,185 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 100)]
-    private ?string $nom = null;
+    #[ORM\Column(length: 180)]
+    private ?string $email = null;
 
-    #[ORM\Column(length: 100)]
-    private ?string $Prenom = null;
-
-    #[ORM\Column(length: 100)]
-    private ?string $Societe = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $Mot_de_passe = null;
-
+    /**
+     * @var list<string> The user roles
+     */
     #[ORM\Column]
-    private ?\DateTimeImmutable $created_at = null;
+    private array $roles = [];
 
+    /**
+     * @var string The hashed password
+     */
     #[ORM\Column]
-    private ?\DateTimeImmutable $Updated_at = null;
+    private ?string $password = null;
+
+    /**
+     * @var Collection<int, Messages>
+     */
+    #[ORM\OneToMany(targetEntity: Messages::class, mappedBy: 'expediteur')]
+    private Collection $messagesEnvoyes;
+
+    /**
+     * @var Collection<int, Messages>
+     */
+    #[ORM\OneToMany(targetEntity: Messages::class, mappedBy: 'destinataire')]
+    private Collection $messagesRecus;
+
+    public function __construct()
+    {
+        $this->messagesEnvoyes = new ArrayCollection();
+        $this->messagesRecus = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getNom(): ?string
+    public function getEmail(): ?string
     {
-        return $this->nom;
+        return $this->email;
     }
 
-    public function setNom(string $nom): static
+    public function setEmail(string $email): static
     {
-        $this->nom = $nom;
+        $this->email = $email;
 
         return $this;
     }
 
-    public function getPrenom(): ?string
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
     {
-        return $this->Prenom;
+        return (string) $this->email;
     }
 
-    public function setPrenom(string $Prenom): static
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
     {
-        $this->Prenom = $Prenom;
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    /**
+     * @param list<string> $roles
+     */
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
 
         return $this;
     }
 
-    public function getSociete(): ?string
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): ?string
     {
-        return $this->Societe;
+        return $this->password;
     }
 
-    public function setSociete(string $Societe): static
+    public function setPassword(string $password): static
     {
-        $this->Societe = $Societe;
+        $this->password = $password;
 
         return $this;
     }
 
-    public function getMotDePasse(): ?string
+    /**
+     * Ensure the session doesn't contain actual password hashes by CRC32C-hashing them, as supported since Symfony 7.3.
+     */
+    public function __serialize(): array
     {
-        return $this->Mot_de_passe;
+        $data = (array) $this;
+        $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
+
+        return $data;
     }
 
-    public function setMotDePasse(string $Mot_de_passe): static
+    /**
+     * @return Collection<int, Messages>
+     */
+    public function getMessagesEnvoyes(): Collection
     {
-        $this->Mot_de_passe = $Mot_de_passe;
+        return $this->messagesEnvoyes;
+    }
+
+    public function addMessagesEnvoye(Messages $messagesEnvoye): static
+    {
+        if (!$this->messagesEnvoyes->contains($messagesEnvoye)) {
+            $this->messagesEnvoyes->add($messagesEnvoye);
+            $messagesEnvoye->setExpediteur($this);
+        }
 
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function removeMessagesEnvoye(Messages $messagesEnvoye): static
     {
-        return $this->created_at;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $created_at): static
-    {
-        $this->created_at = $created_at;
+        if ($this->messagesEnvoyes->removeElement($messagesEnvoye)) {
+            // set the owning side to null (unless already changed)
+            if ($messagesEnvoye->getExpediteur() === $this) {
+                $messagesEnvoye->setExpediteur(null);
+            }
+        }
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    /**
+     * @return Collection<int, Messages>
+     */
+    public function getMessagesRecus(): Collection
     {
-        return $this->Updated_at;
+        return $this->messagesRecus;
     }
 
-    public function setUpdatedAt(\DateTimeImmutable $Updated_at): static
+    public function addMessagesRecu(Messages $messagesRecu): static
     {
-        $this->Updated_at = $Updated_at;
+        if (!$this->messagesRecus->contains($messagesRecu)) {
+            $this->messagesRecus->add($messagesRecu);
+            $messagesRecu->setDestinataire($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessagesRecu(Messages $messagesRecu): static
+    {
+        if ($this->messagesRecus->removeElement($messagesRecu)) {
+            // set the owning side to null (unless already changed)
+            if ($messagesRecu->getDestinataire() === $this) {
+                $messagesRecu->setDestinataire(null);
+            }
+        }
 
         return $this;
     }

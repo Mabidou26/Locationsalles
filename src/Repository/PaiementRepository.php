@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Paiement;
-use App\Entity\Facture;
+use App\Entity\Factures;
 use App\Enum\MethodePaiement;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -21,23 +21,21 @@ class PaiementRepository extends ServiceEntityRepository
     /**
      * @return Paiement[]
      */
-    public function findByMethode(MethodePaiement $methode): array
+    public function findByMethode(MethodePaiement|string $methode): array
     {
         return $this->createQueryBuilder('p')
-            ->andWhere('p.methode = :methode')
+            ->andWhere('p.Methode_paiement = :methode')
             ->setParameter('methode', $methode)
-            ->orderBy('p.datePaiement', 'DESC')
             ->getQuery()
             ->getResult();
     }
 
-    public function findOneByFacture(Facture $facture): ?Paiement
+    public function findOneByFactures(Factures $factures): ?Paiement
     {
         return $this->createQueryBuilder('p')
-            ->andWhere('p.facture = :facture')
-            ->setParameter('facture', $facture)
+            ->andWhere('p.Factures = :factures')
+            ->setParameter('factures', $factures)
             ->getQuery()
             ->getOneOrNullResult();
-            
     }
 }

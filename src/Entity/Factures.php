@@ -2,7 +2,10 @@
 
 namespace App\Entity;
 
+use App\Enum\StatutFactures;
 use App\Repository\FacturesRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -14,17 +17,34 @@ class Factures
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 0)]
-    private ?string $montant_total = null;
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    private ?string $montantTotal = null;
 
-    #[ORM\Column(type: Types::SIMPLE_ARRAY)]
-    private array $Statut = [];
-
-    #[ORM\Column]
-    private ?\DateTimeImmutable $Created_at = null;
+    #[ORM\Column(type: 'enum', enumType: StatutFactures::class)]
+    private ?StatutFactures $statut = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $Updated_at = null;
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $updatedAt = null;
+
+    /**
+     * @var Collection<int, Paiement>
+     */
+    #[ORM\OneToMany(targetEntity: Paiement::class, mappedBy: 'factures')]
+    private Collection $paiements;
+
+    #[ORM\ManyToOne(inversedBy: 'factures')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Reservations $Reservations = null;
+
+    public function __construct()
+    {
+        $this->paiements = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
@@ -33,49 +53,92 @@ class Factures
 
     public function getMontantTotal(): ?string
     {
-        return $this->montant_total;
+        return $this->montantTotal;
     }
 
-    public function setMontantTotal(string $montant_total): static
+    public function setMontantTotal(string $montantTotal): static
     {
-        $this->montant_total = $montant_total;
+        $this->montantTotal = $montantTotal;
 
         return $this;
     }
 
-    public function getStatut(): array
+    public function getStatut(): ?StatutFactures
     {
-        return $this->Statut;
+        return $this->statut;
     }
 
-    public function setStatut(array $Statut): static
+    public function setStatut(StatutFactures $statut): static
     {
-        $this->Statut = $Statut;
+        $this->statut = $statut;
+
+        return $this;
+    }
+
+
+    /**
+     * @return Collection<int, Paiement>
+     */
+    public function getPaiements(): Collection
+    {
+        return $this->paiements;
+    }
+
+    public function addPaiement(Paiement $paiement): static
+    {
+        if (!$this->paiements->contains($paiement)) {
+            $this->paiements->add($paiement);
+            $paiement->setFactures($this);
+        }
+
+        return $this;
+    }
+
+    public function removePaiement(Paiement $paiement): static
+    {
+        if ($this->paiements->removeElement($paiement)) {
+            if ($paiement->getFactures() === $this) {
+                $paiement->setFactures(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getReservations(): ?Reservations
+    {
+        return $this->Reservations;
+    }
+
+    public function setReservations(?Reservations $Reservations): static
+    {
+        $this->Reservations = $Reservations;
 
         return $this;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->Created_at;
+        return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $Created_at): static
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
-        $this->Created_at = $Created_at;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
     public function getUpdatedAt(): ?\DateTimeImmutable
     {
-        return $this->Updated_at;
+        return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeImmutable $Updated_at): static
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
     {
-        $this->Updated_at = $Updated_at;
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
+
 }
