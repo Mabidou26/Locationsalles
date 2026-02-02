@@ -3,9 +3,9 @@
 -- =========================
 
 -- =========================
--- TABLE : utilisateurs
+-- TABLE : user
 -- =========================
-CREATE TABLE utilisateurs (
+CREATE TABLE user (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
@@ -30,19 +30,19 @@ CREATE TABLE salles (
 -- =========================
 CREATE TABLE reservations (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    utilisateur_id INT NOT NULL,
+    user_id INT NOT NULL,
     salle_id INT NOT NULL,
     date_debut DATETIME NOT NULL,
     date_fin DATETIME NOT NULL,
     statut VARCHAR(50) DEFAULT 'en attente',
 
-    CONSTRAINT fk_reservation_utilisateur
-        FOREIGN KEY (utilisateur_id)
-        REFERENCES utilisateurs(id)
+    CONSTRAINT fk_reservation_user
+        FOREIGN KEY user_id
+        REFERENCES user (id)
         ON DELETE CASCADE,
 
     CONSTRAINT fk_reservation_salle
-        FOREIGN KEY (salle_id)
+        FOREIGN KEY salle_id
         REFERENCES salles(id)
         ON DELETE CASCADE,
 
@@ -95,12 +95,12 @@ CREATE TABLE messages (
 
     CONSTRAINT fk_message_expediteur
         FOREIGN KEY (expediteur_id)
-        REFERENCES utilisateurs(id)
+        REFERENCES user(id)
         ON DELETE CASCADE,
 
     CONSTRAINT fk_message_destinataire
         FOREIGN KEY (destinataire_id)
-        REFERENCES utilisateurs(id)
+        REFERENCES user(id)
         ON DELETE CASCADE
 );
 

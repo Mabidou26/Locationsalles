@@ -1,0 +1,36 @@
+<?php
+
+namespace App\DataFixtures;
+
+use App\Entity\User;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Persistence\ObjectManager;
+
+class UserFixtures extends Fixture
+{
+    public function load(ObjectManager $manager): void
+    {
+        // Créer l'admin
+        $admin = new User();
+        $admin->setEmail('admin@locevents.com');
+        $admin->setPassword('$2y$13$VotreHashIci$2y$13$g3y1zMwEx28Ia0J8NU5mbu9qRRl3jfDfrVuhwaPlAUKVu.FCtlzEm '); // Remplacez par votre vrai hash
+        $admin->setRoles(['ROLE_USER', 'ROLE_ADMIN']);
+
+        
+        $manager->persist($admin);
+        $this->addReference('USER_ADMIN', $admin);
+
+        // Créer 10 utilisateurs normaux
+        for ($i = 1; $i <= 10; $i++) {
+            $user = new User();
+            $user->setEmail('user' . $i . '@user.com');
+            $user->setPassword('$2y$13$mzQqKWaIoc7kRDEpavuVG.f3GouvXneQHgHwx5OOCnvGKpmU6nLHq');
+            $user->setRoles(['ROLE_USER']);
+            
+            $manager->persist($user);
+            $this->addReference('USER_' . $i, $user);
+        }
+
+        $manager->flush();
+    }
+}

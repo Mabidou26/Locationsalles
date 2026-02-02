@@ -1,20 +1,113 @@
-{% extends 'base.html.twig' %}
 
-{% block title %}Hello PaiementController!{% endblock %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Location de Salles Premium</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800">
 
-{% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+  <!-- Header -->
+  <header class="relative bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-20">
+    <div class="container mx-auto text-center px-4">
+      <h1 class="text-5xl font-bold drop-shadow-lg">Location de Salles Premium</h1>
+      <p class="mt-4 text-lg drop-shadow">Espaces modernes équipés pour vos réunions, événements et formations</p>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+      <!-- Boutons Interface -->
+      <div class="mt-8 flex justify-center gap-4 flex-wrap">
+        <a href="user.html" class="px-6 py-3 bg-white text-blue-600 font-semibold rounded-full shadow-lg hover:bg-blue-50 transition">Interface Utilisateur</a>
+        <a href="admin.html" class="px-6 py-3 bg-gray-900 text-white font-semibold rounded-full shadow-lg hover:bg-gray-800 transition">Interface Admin</a>
+      </div>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>/Users/mabidou/Documents/locationsalles/src/Controller/PaiementController.php</code></li>
-        <li>Your template at <code>/Users/mabidou/Documents/locationsalles/templates/paiement/index.html.twig</code></li>
-    </ul>
-</div>
-{% endblock %}
+      <!-- Filtres -->
+      <div class="mt-10 flex justify-center gap-4 flex-wrap">
+        <label class="bg-white text-gray-800 px-4 py-2 rounded-full flex items-center gap-2 cursor-pointer shadow hover:bg-gray-100 transition">
+          <input type="checkbox" value="projecteur" class="accent-blue-600"> Projecteur
+        </label>
+        <label class="bg-white text-gray-800 px-4 py-2 rounded-full flex items-center gap-2 cursor-pointer shadow hover:bg-gray-100 transition">
+          <input type="checkbox" value="son" class="accent-blue-600"> Son
+        </label>
+        <label class="bg-white text-gray-800 px-4 py-2 rounded-full flex items-center gap-2 cursor-pointer shadow hover:bg-gray-100 transition">
+          <input type="checkbox" value="wifi" class="accent-blue-600"> Wifi
+        </label>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="container mx-auto p-6 grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+    <!-- Les cartes seront injectées ici par JS -->
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white text-center py-6 mt-12">
+    <p>© 2026 Location de Salles Premium — Tous droits réservés</p>
+  </footer>
+
+  <!-- Script JS -->
+  <script>
+    const rooms = [
+      {
+        name: "Salle Horizon",
+        image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d",
+        equipment: ["projecteur", "wifi"],
+        price: 120
+      },
+      {
+        name: "Salle Conférence Pro",
+        image: "https://images.unsplash.com/photo-1515169067865-5387ec356754",
+        equipment: ["projecteur", "son", "wifi"],
+        price: 200
+      },
+      {
+        name: "Salle Créative",
+        image: "https://images.unsplash.com/photo-1524758631624-e2822e304c36",
+        equipment: ["son"],
+        price: 90
+      },
+      {
+        name: "Salle Design",
+        image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2",
+        equipment: ["projecteur", "wifi", "son"],
+        price: 180
+      }
+    ];
+
+    const container = document.querySelector('main');
+    const checkboxes = document.querySelectorAll('header input[type="checkbox"]');
+
+    function renderRooms(list) {
+      container.innerHTML = '';
+      list.forEach(room => {
+        const card = document.createElement('div');
+        card.className = "bg-white rounded-2xl shadow-lg overflow-hidden transform hover:scale-105 transition";
+
+        card.innerHTML = `
+          <img src="${room.image}" alt="${room.name}" class="w-full h-48 object-cover">
+          <div class="p-6 flex flex-col gap-3">
+            <h2 class="text-xl font-semibold">${room.name}</h2>
+            <p class="text-gray-600 text-sm">Équipements: ${room.equipment.join(', ')}</p>
+            <div class="mt-auto font-bold text-blue-600 text-lg">${room.price} € / jour</div>
+            <button class="mt-3 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Réserver</button>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function filterRooms() {
+      const selected = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value);
+      const filtered = selected.length === 0 ? rooms : rooms.filter(r => selected.every(e => r.equipment.includes(e)));
+      renderRooms(filtered);
+    }
+
+    checkboxes.forEach(cb => cb.addEventListener('change', filterRooms));
+    renderRooms(rooms);
+  </script>
+
+</body>
+</html>

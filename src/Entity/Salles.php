@@ -18,8 +18,8 @@ class Salles
     #[ORM\Column(length: 100)]
     private ?string $Nom_de_salle = null;
 
-    #[ORM\Column(type: Types::NUMBER)]
-    private ?Number $Capacité = null;
+   #[ORM\Column(type: 'integer')]
+    private ?int $Capacite = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $Descriptif = null;
@@ -50,15 +50,16 @@ class Salles
         return $this;
     }
 
-    public function getCapacité(): ?Number
+    public function getCapacite(): ?int
     {
-        return $this->Capacité;
+        return $this->Capacite;
     }
 
-    public function setCapacité(Number $Capacité): static
+    public function setCapacite(int $Capacite): static
+    
     {
-        $this->Capacité = $Capacité;
-
+        $this->Capacite = $Capacite;
+        
         return $this;
     }
 

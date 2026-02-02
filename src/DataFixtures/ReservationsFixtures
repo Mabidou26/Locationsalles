@@ -1,0 +1,27 @@
+<?php
+
+namespace App\DataFixtures;
+
+use App\Entity\Reservations;
+use App\Entity\User;
+use App\Entity\Salles;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Persistence\ObjectManager;
+
+class ReservationsFixtures extends Fixture
+{
+    public function load(ObjectManager $manager): void
+    {
+        $user = $manager->getRepository(User::class)->findOneBy([]);
+        $salle = $manager->getRepository(Salles::class)->findOneBy([]);
+
+        $reservation = new Reservations();
+        $reservation->setUser($user);
+        $reservation->setSalle($salle);
+        $reservation->setDateDebut(new \DateTime(''));
+        $reservation->setDateFin(new \DateTime(''));
+
+        $manager->persist($reservation);
+        $manager->flush();
+    }
+}

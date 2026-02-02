@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-
+use App\Enum\MethodePaiement;
 use App\Repository\PaiementRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,14 +15,13 @@ class Paiement
     #[ORM\Column(nullable: false)]
     private ?int $id = null;
 
-
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: false)]
     private string $montant;
+
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: false)]
     private \DateTimeInterface $datePaiement;
 
-   
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
     private ?\DateTimeImmutable $createdAt = null;
@@ -30,14 +29,13 @@ class Paiement
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\Column(length: 50)]
-    private ?string $Methode_paiement = null;
+   #[ORM\Column(type: 'enum', enumType: MethodePaiement::class)]
+    private ?MethodePaiement $methodePaiement = null;
 
     #[ORM\ManyToOne(inversedBy: 'paiements')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Factures $Factures = null;
 
-    // ----- Getters / Setters -----
 
     public function getId(): ?int
 
@@ -69,7 +67,29 @@ class Paiement
         return $this;
     }
 
-   
+    public function getMethodePaiement(): ?MethodePaiement
+    {
+        return $this->methodePaiement;
+    }
+
+    public function setMethodePaiement(?MethodePaiement $methodePaiement): static
+    {
+        $this->methodePaiement = $methodePaiement;
+        return $this;
+    }
+    
+
+    public function getFactures(): ?Factures
+    {
+        return $this->Factures;
+    }
+
+    public function setFactures(?Factures $Factures): static
+    {
+        $this->Factures = $Factures;
+
+        return $this;
+    }
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {
@@ -93,15 +113,4 @@ class Paiement
         return $this;
     }
 
-    public function getFactures(): ?Factures
-    {
-        return $this->Factures;
-    }
-
-    public function setFactures(?Factures $Factures): static
-    {
-        $this->Factures = $Factures;
-
-        return $this;
-    }
 }
