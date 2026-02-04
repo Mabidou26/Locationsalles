@@ -8,6 +8,16 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SallesRepository::class)]
+#[ApiResource(
+    operations: [
+        new GetCollection(security: "is_granted('ROLE_ADMIN')"),
+        new Get(security: "is_granted('ROLE_ADMIN') or object == user"),
+        new Post(security: "is_granted('ROLE_ADMIN')"),
+        new Put(security: "is_granted('ROLE_ADMIN') or object == user"),
+        new Delete(security: "is_granted('ROLE_ADMIN')")
+    ]
+)]
+
 class Salles
 {
     #[ORM\Id]
@@ -18,8 +28,8 @@ class Salles
     #[ORM\Column(length: 100)]
     private ?string $Nom_de_salle = null;
 
-   #[ORM\Column(type: 'integer')]
-    private ?int $Capacite = null;
+    #[ORM\Column(type: Types::INTEGER)]
+    private ?Number $Capacite = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $Descriptif = null;
@@ -50,18 +60,16 @@ class Salles
         return $this;
     }
 
-    public function getCapacite(): ?int
-    {
-        return $this->Capacite;
-    }
+        public function getCapacite(): ?int
+        {
+            return $this->Capacite;
+        }
 
-    public function setCapacite(int $Capacite): static
-    
-    {
-        $this->Capacite = $Capacite;
-        
-        return $this;
-    }
+        public function setCapacite(int $Capacite): static
+        {
+            $this->Capacite = $Capacite;
+            return $this;
+        }
 
     public function getDescriptif(): ?string
     {

@@ -14,7 +14,23 @@ install: ## Installe les dépendances et crée la base
 	symfony console doctrine:database:create
 	symfony console lexik:jwt:generate-keypair
 
+cache-clear: ## Vide le cache
+	php bin/console cache:clear
+    php bin/console cache:warmup
+
 rebuild: ## Réinitialise la BDD et charge les fixtures
 	symfony console doctrine:database:drop --force
 	symfony console doctrine:database:create
-	symfony console doctrine:migrations:migrat
+	symfony console doctrine:migrations:migrate
+
+fixtures: symfony console doctrine:fixtures:load --no-interaction
+
+test: ## Lance les tests
+	php bin/console app:validate-entities
+	php bin/phpunit
+
+admin: ## Ouvre le dashboard admin
+	@echo "Dashboard admin: http://localhost:8000/admin"
+
+api: ## Ouvre la doc API
+	@echo "Documentation API: http://localhost:8000/api"
