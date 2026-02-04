@@ -38,3 +38,9 @@ Cloner le dépôt pour obtenir la dernière version :
 
 git clone https://github.com/TON_ORGA/Locationsalles.git (lien envoyé par mail)
 
+S’ils ont déjà un clone du dépôt :
+
+git fetch origin
+git reset --hard origin/main
+
+
