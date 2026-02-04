@@ -1,11 +1,28 @@
 <?php
 
-namespace App\Entity;
+namespace App\DataFixtures;
 
-use App\Repository\MessagesRepository;
-use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Paiement;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Doctrine\Persistence\ObjectManager;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Delete;
 
-#[ORM\Entity(repositoryClass: MessagesRepository::class)]
+
+#[ApiResource(
+    operations: [
+        new GetCollection(security: "is_granted('ROLE_ADMIN')"),
+        new Get(security: "is_granted('ROLE_ADMIN') or object == user"),
+        new Post(security: "is_granted('ROLE_ADMIN')"),
+        new Put(security: "is_granted('ROLE_ADMIN') or object == user"),
+        new Delete(security: "is_granted('ROLE_ADMIN')")
+    ]
+)]
 class Messages
 {
     #[ORM\Id]
