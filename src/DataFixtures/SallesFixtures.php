@@ -1,213 +1,65 @@
 <?php
 
-namespace App\Entity;
+namespace App\DataFixtures;
 
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\Delete;
-use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Salles;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
-
-#[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ApiResource(
-    operations: [
-        new GetCollection(security: "is_granted('ROLE_ADMIN')"),
-        new Get(security: "is_granted('ROLE_ADMIN') or object == user"),
-        new Post(security: "is_granted('ROLE_ADMIN')"),
-        new Put(security: "is_granted('ROLE_ADMIN') or object == user"),
-        new Delete(security: "is_granted('ROLE_ADMIN')")
-    ]
-)]
-class SallesFixtures implements Fixture
+class SallesFixtures extends Fixture
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
-
-    #[ORM\Column(length: 180)]
-    private ?string $email = null;
-
-    /**
-     * @var list<string> The user roles
-     */
-    #[ORM\Column]
-    private array $roles = [];
-
-    /**
-     * @var string The hashed password
-     */
-    #[ORM\Column]
-    private ?string $password = null;
-
-    /**
-     * @var Collection<int, Messages>
-     */
-    #[ORM\OneToMany(targetEntity: Messages::class, mappedBy: 'expediteur')]
-    private Collection $messagesEnvoyes;
-
-    /**
-     * @var Collection<int, Messages>
-     */
-    #[ORM\OneToMany(targetEntity: Messages::class, mappedBy: 'destinataire')]
-    private Collection $messagesRecus;
-
-    public function __construct()
+    public function load(ObjectManager $manager): void
     {
-        $this->messagesEnvoyes = new ArrayCollection();
-        $this->messagesRecus = new ArrayCollection();
-    }
+        // Salle 1 : Horizon
+        $salle1 = new Salles();
+        $salle1->setNom('Horizon');
+        $salle1->setCapacite(50);
+        $salle1->setPrixJournalier('350.00');
+        $salle1->setDescription('Salle moderne avec vue panoramique, équipée d\'un vidéoprojecteur 4K et d\'un système audio professionnel. Idéale pour les conférences et séminaires.');
+        
+        $manager->persist($salle1);
+        $this->addReference('SALLE_HORIZON', $salle1);
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+        // Salle 2 : Conférence Pro
+        $salle2 = new Salles();
+        $salle2->setNom('Conférence Pro');
+        $salle2->setCapacite(100);
+        $salle2->setPrixJournalier('550.00');
+        $salle2->setDescription('Grande salle de conférence professionnelle avec scène, système de sonorisation haut de gamme et éclairage modulable. Parfaite pour les grandes présentations.');
+        
+        $manager->persist($salle2);
+        $this->addReference('SALLE_CONFERENCE_PRO', $salle2);
 
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
+        // Salle 3 : Créative
+        $salle3 = new Salles();
+        $salle3->setNom('Créative');
+        $salle3->setCapacite(30);
+        $salle3->setPrixJournalier('250.00');
+        $salle3->setDescription('Espace chaleureux et modulable pour ateliers créatifs, brainstorming et formations. Équipée de tableaux blancs interactifs et mobilier flexible.');
+        
+        $manager->persist($salle3);
+        $this->addReference('SALLE_CREATIVE', $salle3);
 
-    public function setEmail(string $email): static
-    {
-        $this->email = $email;
+        // Salle 4 : Executive
+        $salle4 = new Salles();
+        $salle4->setNom('Executive');
+        $salle4->setCapacite(20);
+        $salle4->setPrixJournalier('450.00');
+        $salle4->setDescription('Salle de réunion haut de gamme pour les comités de direction. Table ovale en bois massif, écrans interactifs et confidentialité assurée.');
+        
+        $manager->persist($salle4);
+        $this->addReference('SALLE_EXECUTIVE', $salle4);
 
-        return $this;
-    }
+        // Salle 5 : Startup Lab
+        $salle5 = new Salles();
+        $salle5->setNom('Startup Lab');
+        $salle5->setCapacite(15);
+        $salle5->setPrixJournalier('180.00');
+        $salle5->setDescription('Espace coworking moderne avec ambiance startup. Wifi ultra-rapide, prises multiples, canapés confortables et tableau de présentation mobile.');
+        
+        $manager->persist($salle5);
+        $this->addReference('SALLE_STARTUP_LAB', $salle5);
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
-    public function getUserIdentifier(): string
-    {
-        return (string) $this->email;
-    }
-
-    /**
-     * @see UserInterface
-     */
-    public function getRoles(): array
-    {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
-    }
-
-    /**
-     * @param list<string> $roles
-     */
-    public function setRoles(array $roles): static
-    {
-        $this->roles = $roles;
-
-        return $this;
-    }
-
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
-    public function getPassword(): ?string
-    {
-        return $this->password;
-    }
-
-    public function setPassword(string $password): static
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
-    /**
-     * @see UserInterface
-     */
-    public function eraseCredentials(): void
-    {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
-    }
-
-    /**
-     * Ensure the session doesn't contain actual password hashes by CRC32C-hashing them, as supported since Symfony 7.3.
-     */
-    public function __serialize(): array
-    {
-        $data = (array) $this;
-        $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
-
-        return $data;
-    }
-
-    /**
-     * @return Collection<int, Messages>
-     */
-    public function getMessagesEnvoyes(): Collection
-    {
-        return $this->messagesEnvoyes;
-    }
-
-    public function addMessagesEnvoye(Messages $messagesEnvoye): static
-    {
-        if (!$this->messagesEnvoyes->contains($messagesEnvoye)) {
-            $this->messagesEnvoyes->add($messagesEnvoye);
-            $messagesEnvoye->setExpediteur($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMessagesEnvoye(Messages $messagesEnvoye): static
-    {
-        if ($this->messagesEnvoyes->removeElement($messagesEnvoye)) {
-            // set the owning side to null (unless already changed)
-            if ($messagesEnvoye->getExpediteur() === $this) {
-                $messagesEnvoye->setExpediteur(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Messages>
-     */
-    public function getMessagesRecus(): Collection
-    {
-        return $this->messagesRecus;
-    }
-
-    public function addMessagesRecu(Messages $messagesRecu): static
-    {
-        if (!$this->messagesRecus->contains($messagesRecu)) {
-            $this->messagesRecus->add($messagesRecu);
-            $messagesRecu->setDestinataire($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMessagesRecu(Messages $messagesRecu): static
-    {
-        if ($this->messagesRecus->removeElement($messagesRecu)) {
-            // set the owning side to null (unless already changed)
-            if ($messagesRecu->getDestinataire() === $this) {
-                $messagesRecu->setDestinataire(null);
-            }
-        }
-
-        return $this;
+        $manager->flush();
     }
 }
