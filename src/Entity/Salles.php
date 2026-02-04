@@ -1,11 +1,14 @@
 <?php
 
-namespace App\Entity;
-
 use App\Repository\SallesRepository;
-use BcMath\Number;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Delete;
 
 #[ORM\Entity(repositoryClass: SallesRepository::class)]
 #[ApiResource(
